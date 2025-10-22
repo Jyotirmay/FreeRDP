@@ -98,12 +98,6 @@ jobs:
           }
           Write-Host "TCP connectivity successful!"
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-          architecture: 'x64'
-
       - name: Maintain Connection
         run: |
           Write-Host "`n=== RDP ACCESS ==="
