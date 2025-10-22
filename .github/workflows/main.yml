@@ -9,6 +9,29 @@ jobs:
     timeout-minutes: 3600
 
     steps:
+      - name: Find and switch to Python 3.10
+        shell: pwsh
+        run: |
+          Write-Host "Available Python versions:"
+          $versions = Get-ChildItem "C:\hostedtoolcache\windows\Python" -Name
+          $versions | ForEach-Object { Write-Host "  - $_" }
+          
+          # Find any Python 3.10 version
+          $python310 = $versions | Where-Object { $_ -like "3.10.*" } | Select-Object -First 1
+          
+          if ($python310) {
+              Write-Host "Found Python $python310, switching to it..."
+              $pythonPath = "C:\hostedtoolcache\windows\Python\$python310\x64"
+              $env:PATH = "$pythonPath;$pythonPath\Scripts;" + $env:PATH
+              
+              Write-Host "Now using:"
+              python --version
+              Write-Host "Location:"
+              which python
+          } else {
+              Write-Error "No Python 3.10 version found!"
+              exit 1
+          }
       - name: Configure Core RDP Settings
         run: |
           # Enable Remote Desktop and disable Network Level Authentication (if needed)
